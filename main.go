@@ -4,14 +4,16 @@ import (
 	"net/http"
 	"net"
 	"os/exec"
+	"os"
 	"bytes"
 	"log"
 	"github.com/yelinaung/wifi-name"
 	"strings"
 	"strconv"
-	//"fmt"
+	"fmt"
 )
 
+var Listen string
 
 type InterfaceAddress struct {
 	name string
@@ -140,9 +142,38 @@ func status(w http.ResponseWriter, r *http.Request){
 	w.Write([]byte(message))
 }
 
+/**
+ * print the help message
+ */
+func help() {
+	fmt.Println("Help dialog:\n")
+	fmt.Println("Options:")
+	fmt.Println("\thelp: Print this help dialog")
+	fmt.Println("\tlisten: listen on this address")
+	fmt.Println("Usage:")
+	fmt.Println("\tstatus_exporter listen=localhost:9999")
+	fmt.Println("\tstatus_exporter help")
+}
+
 func main() {
+	args := os.Args[1:]
+	if len(args) > 2 || len(args) == 0 {
+		help()
+		os.Exit(1)
+	}
+
+	for i := 0; i < len(args); i++ {
+		if strings.EqualFold(args[i], "help") {
+			help()
+			os.Exit(0)
+		} else if strings.HasPrefix(args[i], "listen="){
+			com := strings.Split(args[i], "=")
+			Listen = com[1]
+		}
+	}
+
 	http.HandleFunc("/", status)
-	err := http.ListenAndServe(":9999", nil)
+	err := http.ListenAndServe(Listen, nil)
 	if err != nil {
 		panic(err)
 	}
