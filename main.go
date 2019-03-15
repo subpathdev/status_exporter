@@ -138,6 +138,7 @@ func status(w http.ResponseWriter, r *http.Request){
 	message += "status_service{name=\"prometheus\"} " + strconv.Itoa(stateOfService("prometheus")) + "\n";
 	message += "status_service{name=\"grafana-server\"} " + strconv.Itoa(stateOfService("grafana-server")) + "\n";
 	message += "status_service{name=\"pixiecore\"} " + strconv.Itoa(stateOfService("pixiecore")) + "\n";
+	message += "status_service{name=\"waitron\"} " + strconv.Itoa(stateOfService("waitron")) + "\n";
 
 	w.Write([]byte(message))
 }
