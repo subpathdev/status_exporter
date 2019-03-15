@@ -1,0 +1,10 @@
+[Unit]
+Description=status exporter for Prometheus
+
+[Service]
+User=pi
+Type=simple
+ExecStart=/home/pi/goPkg/bin/status_exporter listen=:9998
+
+[Install]
+WantedBy=multi-user.target
